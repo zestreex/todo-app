@@ -4,19 +4,40 @@ const taskList = document.getElementById('taskList');
 const counter = document.getElementById('counter');
 const clearCompletedBtn = document.getElementById('clearCompleted');
 const filterBtns = document.querySelectorAll('.filter-btn');
+const themeToggle = document.getElementById('themeToggle');
 
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 let currentFilter = 'all';
 
-// Отрисовка задач с учетом фильтра
+// Логика смены темы
+const currentTheme = localStorage.getItem('theme') || 'dark';
+if (currentTheme === 'light') {
+  document.body.classList.add('light-theme');
+  themeToggle.textContent = '☀️';
+}
+
+themeToggle.addEventListener('click', () => {
+  document.body.classList.toggle('light-theme');
+  let theme = 'dark';
+  
+  if (document.body.classList.contains('light-theme')) {
+    theme = 'light';
+    themeToggle.textContent = '☀️';
+  } else {
+    themeToggle.textContent = '🌙';
+  }
+  
+  localStorage.setItem('theme', theme);
+});
+
+// Отрисовка задач
 function renderTasks() {
   taskList.innerHTML = '';
 
-  // Фильтруем задачи
   const filteredTasks = tasks.filter(task => {
     if (currentFilter === 'active') return !task.completed;
     if (currentFilter === 'completed') return task.completed;
-    return true; // 'all'
+    return true;
   });
 
   filteredTasks.forEach((task) => {
@@ -49,13 +70,11 @@ function renderTasks() {
   updateCounter();
 }
 
-// Обновление счетчика невыполненных дел
 function updateCounter() {
   const activeCount = tasks.filter(t => !t.completed).length;
   counter.textContent = `Осталось: ${activeCount}`;
 }
 
-// Добавление новой задачи
 function addTask() {
   const text = taskInput.value.trim();
   if (text === '') return;
@@ -65,13 +84,11 @@ function addTask() {
   saveAndRender();
 }
 
-// Сохранение и перерисовка
 function saveAndRender() {
   localStorage.setItem('tasks', JSON.stringify(tasks));
   renderTasks();
 }
 
-// Переключение фильтров
 filterBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     filterBtns.forEach(b => b.classList.remove('active'));
@@ -81,17 +98,14 @@ filterBtns.forEach(btn => {
   });
 });
 
-// Удаление всех завершённых задач
 clearCompletedBtn.addEventListener('click', () => {
   tasks = tasks.filter(t => !t.completed);
   saveAndRender();
 });
 
-// События ввода
 addBtn.addEventListener('click', addTask);
 taskInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') addTask();
 });
 
-// Первичная отрисовка
 renderTasks();
