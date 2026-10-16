@@ -3,180 +3,269 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мой список задач</title>
+  <title>ToDo App — Менеджер Задач</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    :root {
-      --bg-color: #0f1015;
-      --card-bg: #18181b;
-      --card-border: #27272a;
-      --text-color: #e4e4e7;
-      --text-muted: #a1a1aa;
-      --input-bg: #0f1015;
-      --primary: #6366f1;
-      --primary-hover: #4f46e5;
-      --heading-color: #a5b4fc;
-    }
-
-    /* Светлая тема */
-    body.light-theme {
-      --bg-color: #f4f4f5;
-      --card-bg: #ffffff;
-      --card-border: #e4e4e7;
-      --text-color: #18181b;
-      --text-muted: #71717a;
-      --input-bg: #f4f4f5;
-      --primary: #4f46e5;
-      --primary-hover: #4338ca;
-      --heading-color: #4338ca;
-    }
-
     * {
       box-sizing: border-box;
-      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     body {
-      margin: 0;
-      background: var(--bg-color);
-      color: var(--text-color);
-      font-family: 'Inter', Arial, sans-serif;
+      background-color: #0f1015;
+      color: #e4e4e7;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
       padding: 20px;
     }
 
-    .todo-container {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      padding: 30px;
-      border-radius: 20px;
-      width: 100%;
-      max-width: 450px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      position: relative;
+    body.light-theme {
+      background-color: #f4f4f5;
+      color: #18181b;
     }
 
-    .header-wrapper {
+    .container {
+      background: #18181b;
+      border: 1px solid #27272a;
+      width: 100%;
+      max-width: 550px;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    body.light-theme .container {
+      background: #ffffff;
+      border-color: #e4e4e7;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
     }
 
-    h2 {
-      margin: 0;
-      color: var(--heading-color);
+    .header h1 {
+      font-size: 24px;
+      color: #a5b4fc;
     }
 
-    .theme-toggle {
+    body.light-theme .header h1 {
+      color: #4f46e5;
+    }
+
+    .theme-btn {
       background: none;
-      border: 1px solid var(--card-border);
-      color: var(--text-color);
-      font-size: 18px;
-      padding: 6px 10px;
+      border: 1px solid #3f3f46;
+      color: #e4e4e7;
+      padding: 6px 12px;
       border-radius: 10px;
       cursor: pointer;
+      font-size: 16px;
     }
 
-    .theme-toggle:hover {
-      border-color: var(--primary);
+    body.light-theme .theme-btn {
+      border-color: #d4d4d8;
+      color: #18181b;
     }
 
-    .input-group {
+    /* Прогресс-бар */
+    .progress-box {
+      margin-bottom: 20px;
+      background: #27272a;
+      padding: 12px 16px;
+      border-radius: 12px;
+    }
+
+    body.light-theme .progress-box {
+      background: #f4f4f5;
+    }
+
+    .progress-info {
       display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .progress-bar-bg {
+      background: #3f3f46;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    body.light-theme .progress-bar-bg {
+      background: #e4e4e7;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      height: 100%;
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* Форма ввода */
+    .input-form {
+      display: flex;
+      flex-direction: column;
       gap: 10px;
       margin-bottom: 20px;
     }
 
-    input {
-      flex: 1;
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    input[type="text"], input[type="date"], select {
+      background: #27272a;
+      border: 1px solid #3f3f46;
+      color: #fff;
       padding: 12px;
-      background: var(--input-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      color: var(--text-color);
-      font-size: 16px;
+      border-radius: 10px;
       outline: none;
+      font-size: 14px;
     }
 
-    input:focus {
-      border-color: var(--primary);
+    body.light-theme input[type="text"], 
+    body.light-theme input[type="date"], 
+    body.light-theme select {
+      background: #f4f4f5;
+      border-color: #d4d4d8;
+      color: #18181b;
     }
 
-    button.add-btn {
-      padding: 12px 20px;
-      background: var(--primary);
-      color: white;
+    .todo-input {
+      flex: 1;
+    }
+
+    .add-btn {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
       border: none;
-      border-radius: 12px;
-      font-weight: 600;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
       cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s;
     }
 
-    button.add-btn:hover {
-      background: var(--primary-hover);
+    .add-btn:hover {
+      transform: translateY(-2px);
     }
 
+    /* Фильтры */
     .filters {
       display: flex;
-      justify-content: space-between;
-      margin-bottom: 15px;
-      gap: 5px;
+      gap: 8px;
+      margin-bottom: 20px;
     }
 
     .filter-btn {
-      background: transparent;
-      border: 1px solid var(--card-border);
-      color: var(--text-muted);
+      background: #27272a;
+      border: none;
+      color: #a1a1aa;
       padding: 6px 12px;
       border-radius: 8px;
       cursor: pointer;
       font-size: 13px;
     }
 
-    .filter-btn:hover {
-      color: var(--text-color);
+    body.light-theme .filter-btn {
+      background: #f4f4f5;
+      color: #71717a;
     }
 
     .filter-btn.active {
-      background: var(--primary);
+      background: #6366f1;
       color: white;
-      border-color: var(--primary);
     }
 
-    ul {
+    /* Список задач */
+    .todo-list {
       list-style: none;
-      padding: 0;
-      margin: 0;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    li {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px;
-      background: var(--input-bg);
-      border: 1px solid var(--card-border);
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .todo-item {
+      background: #27272a;
+      padding: 14px;
       border-radius: 12px;
-      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      animation: fadeIn 0.3s ease;
+      border-left: 4px solid transparent;
     }
 
-    li.completed span {
-      text-decoration: line-through;
-      color: var(--text-muted);
+    body.light-theme .todo-item {
+      background: #f4f4f5;
     }
 
-    li span {
-      cursor: pointer;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .todo-item.priority-high { border-left-color: #ef4444; }
+    .todo-item.priority-medium { border-left-color: #f59e0b; }
+    .todo-item.priority-low { border-left-color: #10b981; }
+
+    .todo-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       flex: 1;
-      word-break: break-all;
+    }
+
+    .todo-text-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .todo-text {
+      font-size: 15px;
+      word-break: break-word;
+    }
+
+    .todo-item.completed .todo-text {
+      text-decoration: line-through;
+      color: #71717a;
+    }
+
+    .todo-meta {
+      font-size: 11px;
+      color: #a1a1aa;
+      display: flex;
+      gap: 8px;
+    }
+
+    .badge {
+      background: #3f3f46;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    body.light-theme .badge {
+      background: #e4e4e7;
     }
 
     .delete-btn {
@@ -185,66 +274,205 @@
       color: #ef4444;
       cursor: pointer;
       font-size: 16px;
-      margin-left: 10px;
-      opacity: 0.7;
+      padding: 4px;
     }
 
-    .delete-btn:hover {
-      opacity: 1;
-    }
-
-    .footer-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 15px;
-      padding-top: 15px;
-      border-top: 1px solid var(--card-border);
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .clear-btn {
-      background: none;
-      border: none;
-      color: #ef4444;
+    .checkbox {
+      width: 18px;
+      height: 18px;
       cursor: pointer;
-      font-size: 13px;
-      padding: 0;
-    }
-
-    .clear-btn:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-  <div class="todo-container">
-    <div class="header-wrapper">
-      <h2>Список задач</h2>
-      <button class="theme-toggle" id="themeToggle" title="Сменить тему">🌙</button>
-    </div>
-    
-    <div class="input-group">
-      <input type="text" id="taskInput" placeholder="Что нужно сделать?">
-      <button class="add-btn" id="addBtn">Добавить</button>
+  <div class="container">
+    <div class="header">
+      <h1>🚀 Super ToDo</h1>
+      <button class="theme-btn" onclick="toggleTheme()">🌙 / ☀️</button>
     </div>
 
+    <!-- Прогресс выполнения -->
+    <div class="progress-box">
+      <div class="progress-info">
+        <span>Прогресс</span>
+        <span id="progress-text">0%</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-bar"></div>
+      </div>
+    </div>
+
+    <!-- Форма добавления -->
+    <form class="input-form" id="todo-form">
+      <div class="input-row">
+        <input type="text" id="todo-input" class="todo-input" placeholder="Что нужно сделать?" required>
+        <button type="submit" class="add-btn">+</button>
+      </div>
+      <div class="input-row">
+        <select id="priority-select">
+          <option value="low">🟢 Низкий</option>
+          <option value="medium" selected>🟡 Средний</option>
+          <option value="high">🔴 Высокий</option>
+        </select>
+
+        <select id="category-select">
+          <option value="Разное">📁 Разное</option>
+          <option value="Учеба">📚 Учеба</option>
+          <option value="Проект">💻 Проект</option>
+          <option value="Личное">🏠 Личное</option>
+        </select>
+
+        <input type="date" id="date-input">
+      </div>
+    </form>
+
+    <!-- Фильтры -->
     <div class="filters">
       <button class="filter-btn active" data-filter="all">Все</button>
       <button class="filter-btn" data-filter="active">Активные</button>
-      <button class="filter-btn" data-filter="completed">Завершённые</button>
+      <button class="filter-btn" data-filter="completed">Завершенные</button>
     </div>
 
-    <ul id="taskList"></ul>
-
-    <div class="footer-info">
-      <span id="counter">Осталось: 0</span>
-      <button class="clear-btn" id="clearCompleted">Очистить готовые</button>
-    </div>
+    <!-- Список задач -->
+    <ul class="todo-list" id="todo-list"></ul>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    let todos = JSON.parse(localStorage.getItem('super_todos')) || [];
+    let currentFilter = 'all';
+
+    const todoForm = document.getElementById('todo-form');
+    const todoInput = document.getElementById('todo-input');
+    const prioritySelect = document.getElementById('priority-select');
+    const categorySelect = document.getElementById('category-select');
+    const dateInput = document.getElementById('date-input');
+    const todoList = document.getElementById('todo-list');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+
+    // Аудиоклики с помощью Web Audio API (звук завершения задачи)
+    function playSuccessSound() {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime); // Ре
+      osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1); // Ля
+      gain.gain.setValueAtTime(0.1, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + 0.3);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.3);
+    }
+
+    function saveAndRender() {
+      localStorage.setItem('super_todos', JSON.stringify(todos));
+      renderTodos();
+      updateProgress();
+    }
+
+    function updateProgress() {
+      if (todos.length === 0) {
+        document.getElementById('progress-bar').style.width = '0%';
+        document.getElementById('progress-text').textContent = '0%';
+        return;
+      }
+      const completed = todos.filter(t => t.completed).length;
+      const percent = Math.round((completed / todos.length) * 100);
+      document.getElementById('progress-bar').style.width = percent + '%';
+      document.getElementById('progress-text').textContent = percent + '%';
+    }
+
+    function renderTodos() {
+      todoList.innerHTML = '';
+
+      const filteredTodos = todos.filter(todo => {
+        if (currentFilter === 'active') return !todo.completed;
+        if (currentFilter === 'completed') return todo.completed;
+        return true;
+      });
+
+      filteredTodos.forEach(todo => {
+        const li = document.createElement('li');
+        li.className = `todo-item priority-${todo.priority} ${todo.completed ? 'completed' : ''}`;
+
+        li.innerHTML = `
+          <div class="todo-left">
+            <input type="checkbox" class="checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleTodo(${todo.id})">
+            <div class="todo-text-group">
+              <span class="todo-text">${escapeHtml(todo.text)}</span>
+              <div class="todo-meta">
+                <span class="badge">${todo.category}</span>
+                ${todo.date ? `<span>📅 ${todo.date}</span>` : ''}
+              </div>
+            </div>
+          </div>
+          <button class="delete-btn" onclick="deleteTodo(${todo.id})">🗑️</button>
+        `;
+
+        todoList.appendChild(li);
+      });
+    }
+
+    todoForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = todoInput.value.trim();
+      if (!text) return;
+
+      const newTodo = {
+        id: Date.now(),
+        text: text,
+        priority: prioritySelect.value,
+        category: categorySelect.value,
+        date: dateInput.value,
+        completed: false
+      };
+
+      todos.unshift(newTodo);
+      todoInput.value = '';
+      dateInput.value = '';
+      saveAndRender();
+    });
+
+    function toggleTodo(id) {
+      todos = todos.map(todo => {
+        if (todo.id === id) {
+          const newState = !todo.completed;
+          if (newState) playSuccessSound(); // Воспроизводим звук при галочке!
+          return { ...todo, completed: newState };
+        }
+        return todo;
+      });
+      saveAndRender();
+    }
+
+    function deleteTodo(id) {
+      todos = todos.filter(todo => todo.id !== id);
+      saveAndRender();
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.getAttribute('data-filter');
+        renderTodos();
+      });
+    });
+
+    function toggleTheme() {
+      document.body.classList.toggle('light-theme');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Инициализация
+    saveAndRender();
+  </script>
 </body>
 </html>
